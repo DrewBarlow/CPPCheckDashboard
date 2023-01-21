@@ -1,5 +1,9 @@
 ## Planning the backend for a coverage dashboard
 
+### Notes:
+  * `sample_data.zip` contains a randomly selected chunk of files from the SARD dataset.
+  * The chunk in question pertains to CWE36, and 78 files are present.
+
 ### PLANNING:
 #### Goal:
   * Generate a .html file that summarizes what sections of code were covered by CPPCheck.  
