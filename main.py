@@ -12,7 +12,7 @@ def main() -> None:
     parser.add_argument("-a", "--args", type=str, default="", help="The command line arguments to pass to the analyzer.")
     args: Namespace = parser.parse_args()
 
-    sa_coverage.analyze(args.static_analyzer, args.args, stdout=True)
+    sa_coverage.analyze(args.static_analyzer, args.args, to_stdout=True)
     return
 
 if __name__ == "__main__":
