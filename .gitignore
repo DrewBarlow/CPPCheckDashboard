@@ -1,6 +1,9 @@
 # Large folders
 sample_data/
 
+# Compiled objects
+*.o
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
