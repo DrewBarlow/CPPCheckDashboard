@@ -1,9 +1,8 @@
-from multiprocessing import Process
-from os import system  # horrific design choice
+from subprocess import check_output, STDOUT
 from sys import stdout
 from typing import List
 
-def analyze(path_to_analyzer: str, cmd_args: List[str], /, *, to_stdout: bool=False) -> None:
+def analyze(path_to_analyzer: str, cmd_args: str, /, *, to_stdout: bool=False) -> None:
     """
     Accepts command line arguments to be passed to a static analyzer
     as if we were just running that analyzer.
@@ -17,13 +16,8 @@ def analyze(path_to_analyzer: str, cmd_args: List[str], /, *, to_stdout: bool=Fa
         None.
     """
 
-    arg_string: str = f"{path_to_analyzer} {' '.join(cmd_args)}" 
-    process: Process = Process(target=system, args=(arg_string,))
-    process.start()
-    process.join()
-
-    # do something with stdout of the process
-
-    stdout.flush()
+    output: bytes = check_output(f"{path_to_analyzer} {cmd_args}", stderr=STDOUT, shell=True)
+    print(output.decode())
+    
     return
 
