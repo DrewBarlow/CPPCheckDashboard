@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      html * {
+        font-family: "Courier New", Courier, monospace; 
+        font-weight: 700;
+        line-height: 26.4px;
+      } 
+      h1 { font-size: 30px; }
+      p { font-size: 18px; }
+      .checkedNoErr { background: #B0FFAD; }
+      .notChecked { background: #FFADAD; }
+      .checkedErr { background: #FFDEAD; }
+      .outer { border: 1px solid #000000; }
+      .inner {
+        border: 2px solid black;
+        font-size: 24px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <table class="outer">
+      <h1>simple.cpp</h1>
+      <table class="inner">
+        <thead></thead>
+        <tr><td class="checkedNoErr">#include &lt;iostream&gt;</td></tr>
+        <tr><td>&nbsp;</td></tr>
+        <tr><td class="notChecked">// simple invalid free  ▼</td></tr>
+        <tr><td>&nbsp;</td></tr>
+        <tr><td class="checkedNoErr">int main() {</td></tr>
+        <tr><td class="checkedNoErr">&emsp;std::cout &lt;&lt; "invalid free incoming" &lt;&lt; std::endl;</td></tr>
+        <tr><td class="checkedNoErr">&emsp;int* ptr = nullptr;</td></tr>
+        <tr><td class="checkedErr">&emsp;delete ptr;  ▼</td></tr>
+        <tr><td>&nbsp;</td></tr>
+        <tr><td class="checkedNoErr">&emsp;return 0;</td></tr>
+        <tr><td class="checkedNoErr">}</td></tr>
+      </table>
+    </table>
+    <p>&emsp;&emsp;Ran 100% of checks.</p>
+  </body>
+</html>
