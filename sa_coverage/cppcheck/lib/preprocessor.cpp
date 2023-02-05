@@ -528,7 +528,7 @@ static void getConfigs(const simplecpp::TokenList &tokens, std::set<std::string>
         ret.insert(elseError);
 
     // defined, userDefines, undefined, ret
-    std::cout << "~~~ SOECM: NUMBER OF PREPROCESSOR CONFIGS: " << ret.size() << " ~~~" << std::endl;  // SOECM
+    std::cout << "~~~ NUMBER OF PREPROCESSOR CONFIGS: " << ret.size() << " ~~~" << std::endl;  // SOECM
 }
 
 
