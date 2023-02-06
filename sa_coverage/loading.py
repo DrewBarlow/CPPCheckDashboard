@@ -17,7 +17,7 @@ class LoadingIcon:
 
     def __exit__(self, *args: Tuple[Any]) -> None:
         self._is_loading = False
-        print(f"{self._text} | Done!")
+        print(f"{self._text} {next(self._generator)} Done!")
         return
 
     def _animate_icon(self) ->  None:
