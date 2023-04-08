@@ -1,9 +1,11 @@
+from json import dumps
 from .loading import LoadingIcon
 from re import Match, match
 from subprocess import check_output, STDOUT
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 
-NUM_ERROR_LINES: int = 3
+DELIMITER: str = "|%$%|"
+NUM_ERROR_LINES: int = 2
 PATTERN_FILE_PATH: str = r"(.*?\.[\w:]+)"
 PATTERN_ERROR: str = fr"^{PATTERN_FILE_PATH}:\d+:\d+: error:"
 PATTERN_FILE_NAME_NO_CONFIG: str = fr"^Checking {PATTERN_FILE_PATH} ...$"
@@ -12,7 +14,7 @@ PATTERN_NUM_CONFIGS: str = r"^~~~ NUMBER OF PREPROCESSOR CONFIGS: \d+ ~~~$"
 PATTERN_FILE_TOKENS: str = r"^~~~ FILE TOKENS: ~~~$"
 PATTERN_NUM_CHECKS: str = r"^~~~ Ran \d+ checks for this above chunk ~~~$"
 
-def analyze(path_to_analyzer: str, cmd_args: str, /, *, to_stdout: bool=False) -> None:
+def analyze(path_to_analyzer: str, cmd_args: str, *, fname: str) -> None:
     """
     Accepts command line arguments to be passed to a static analyzer
     as if we were just running that analyzer.
@@ -20,12 +22,12 @@ def analyze(path_to_analyzer: str, cmd_args: str, /, *, to_stdout: bool=False) -
     Parameters:
         path_to_analyzer (str): The analyzer in question.
         cmd_args (str): The arguments to be passed to the analyzer.
-        to_stdout (bool, optional): Generates a .html file if False, otherwise prints to stdout.
+        fname (str): The resulting file to dump the parsed info to.
 
     Returns:
         None.
     """
-    output_raw: Union[bytes, None] = None
+    output_raw: Optional[bytes] = None
     stdout: str = ""
     parsed: Dict[str, Dict[str, Dict[str, int|str|List[str] ]]] = {}
     
@@ -35,8 +37,6 @@ def analyze(path_to_analyzer: str, cmd_args: str, /, *, to_stdout: bool=False) -
     with LoadingIcon("Parsing output..."):
         stdout = output_raw.decode()
         parsed = _parse_stdout(stdout)
-        print(parsed)
-        _condense_errors(parsed)
 
     for i, (file_path, config_dict) in enumerate(parsed.items()):
         for config_name, info in config_dict.items():
@@ -45,6 +45,7 @@ def analyze(path_to_analyzer: str, cmd_args: str, /, *, to_stdout: bool=False) -
             if not toks_match_source(file_path, info["toks"]):
                 print("You should not see this yet.")
             
+    _dump_parsed(fname, parsed)
     return
 
 # TODO
@@ -89,20 +90,20 @@ def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, int|str|List[str
     stdout_split: List[str] = stdout.split('\n')
 
     is_next_line_toks: bool = False
-    num_err_lines_remaining: int = 0
+    is_next_line_err: bool = False
     curr_fname: str = ""
     curr_config: str = ""
 
     for line in stdout_split:
-        print(parsed.keys())
         no_config: Optional[Match[str]] = match(PATTERN_FILE_NAME_NO_CONFIG, line)
         with_config: Optional[Match[str]] = match(PATTERN_FILE_NAME_WITH_CONFIG, line)
 
-        # it can be assumed that if this value is anything but 0, we already have a dictionary entry
-        # this must take first priority, as we want to ignore potential pattern collisions when an err is present
-        if num_err_lines_remaining > 0:
-            parsed[curr_fname][curr_config]["errs"].append(line)
-            num_err_lines_remaining -= 1
+        # when the line is an error, combine in with the previous portion via a delimiter
+        if is_next_line_err:
+            parsed[curr_fname][curr_config]["errs"][-1] += DELIMITER + line
+
+            # TODO: Scuffed-- maybe use a regex here instead
+            is_next_line_err = '^' not in line
 
         # a filename is present but a preprocessor config is not
         elif no_config:
@@ -136,12 +137,30 @@ def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, int|str|List[str
             parsed[curr_fname][curr_config]["num_checks"] = num_checks
 
         elif match(PATTERN_ERROR, line):
-            num_err_lines_remaining = NUM_ERROR_LINES - 1
             parsed[curr_fname][curr_config]["errs"] = [line]
+            is_next_line_err = True
+
+    # if a file has no errors, set "errs" to a placeholder value
+    for path, configs in parsed.items():
+        for config_name, info in configs.items():
+            if "errs" not in info:
+                info["errs"] = [""]
 
     return parsed
 
-def _condense_errors(parsed: Dict[str, Dict[str, Dict[str, int|str|List[str] ]]]) -> None:
+def _dump_parsed(fname: str, parsed: Dict[str, Dict[str, Dict[str, int|str|List[str] ]]]) -> None:
+    """
+    Simple JSON write.
+
+    Parameters:
+        fname (str): The JSON file to write to.
+        parsed (Dict[...]): The analysis performed by _parse_stdout.
+
+    Returns:
+        None.
+    """
+    with open(fname, 'w') as file:
+        file.write(dumps(parsed, indent=2))
 
     return
 

@@ -1,0 +1,47 @@
+{
+  "sard/CWE415_Double_Free/CWE415_Double_Free__malloc_free_struct_42.c": {
+    "": {
+      "toks": "static twoIntsStruct * badSource ( twoIntsStruct * data ) { data = ( twoIntsStruct * ) malloc ( 100 * sizeof ( twoIntsStruct ) ) ; if ( data == NULL ) { exit ( -1 ) ; } free ( data ) ; return data ; } void CWE415_Double_Free__malloc_free_struct_42_bad ( ) { twoIntsStruct * data ; data = NULL ; data = badSource ( data ) ; free ( data ) ; } static twoIntsStruct * goodG2BSource ( twoIntsStruct * data ) { data = ( twoIntsStruct * ) malloc ( 100 * sizeof ( twoIntsStruct ) ) ; if ( data == NULL ) { exit ( -1 ) ; } return data ; } static void goodG2B ( ) { twoIntsStruct * data ; data = NULL ; data = goodG2BSource ( data ) ; free ( data ) ; } static twoIntsStruct * goodB2GSource ( twoIntsStruct * data ) { data = ( twoIntsStruct * ) malloc ( 100 * sizeof ( twoIntsStruct ) ) ; if ( data == NULL ) { exit ( -1 ) ; } free ( data ) ; return data ; } static void goodB2G ( ) { twoIntsStruct * data ; data = NULL ; data = goodB2GSource ( data ) ; } void CWE415_Double_Free__malloc_free_struct_42_good ( ) { goodB2G ( ) ; goodG2B ( ) ; } int main ( int argc , char * argv [ ] ) { srand ( ( int ) time ( NULL ) ) ; printLine ( \"Calling good()...\" ) ; CWE415_Double_Free__malloc_free_struct_42_good ( ) ; printLine ( \"Finished good()\" ) ; printLine ( \"Calling bad()...\" ) ; CWE415_Double_Free__malloc_free_struct_42_bad ( ) ; printLine ( \"Finished bad()\" ) ; return 0 ; } ",
+      "errs": [
+        "sard/CWE415_Double_Free/CWE415_Double_Free__malloc_free_struct_42.c:52:5: error: Returning/dereferencing 'data' after it is deallocated / released [deallocret]|%$%|    return data;|%$%|    ^"
+      ],
+      "num_checks": 27
+    }
+  },
+  "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82_bad.cpp": {
+    "": {
+      "toks": "namespace CWE476_NULL_Pointer_Dereference__class_82 { class CWE476_NULL_Pointer_Dereference__class_82_base { public: virtual void action ( TwoIntsClass * data ) = 0 ; } ; class CWE476_NULL_Pointer_Dereference__class_82_bad : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; class CWE476_NULL_Pointer_Dereference__class_82_goodG2B : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; class CWE476_NULL_Pointer_Dereference__class_82_goodB2G : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; } namespace CWE476_NULL_Pointer_Dereference__class_82 { void CWE476_NULL_Pointer_Dereference__class_82_bad :: action ( TwoIntsClass * data ) { printIntLine ( data . intOne ) ; delete data ; } } ",
+      "num_checks": 27,
+      "errs": [
+        ""
+      ]
+    }
+  },
+  "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82_goodB2G.cpp": {
+    "": {
+      "toks": "namespace CWE476_NULL_Pointer_Dereference__class_82 { class CWE476_NULL_Pointer_Dereference__class_82_base { public: virtual void action ( TwoIntsClass * data ) = 0 ; } ; class CWE476_NULL_Pointer_Dereference__class_82_bad : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; class CWE476_NULL_Pointer_Dereference__class_82_goodG2B : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; class CWE476_NULL_Pointer_Dereference__class_82_goodB2G : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; } namespace CWE476_NULL_Pointer_Dereference__class_82 { void CWE476_NULL_Pointer_Dereference__class_82_goodB2G :: action ( TwoIntsClass * data ) { if ( data != NULL ) { printIntLine ( data . intOne ) ; delete data ; } else { printLine ( \"data is NULL\" ) ; } } } ",
+      "num_checks": 27,
+      "errs": [
+        ""
+      ]
+    }
+  },
+  "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82_goodG2B.cpp": {
+    "": {
+      "toks": "namespace CWE476_NULL_Pointer_Dereference__class_82 { class CWE476_NULL_Pointer_Dereference__class_82_base { public: virtual void action ( TwoIntsClass * data ) = 0 ; } ; class CWE476_NULL_Pointer_Dereference__class_82_bad : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; class CWE476_NULL_Pointer_Dereference__class_82_goodG2B : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; class CWE476_NULL_Pointer_Dereference__class_82_goodB2G : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; } namespace CWE476_NULL_Pointer_Dereference__class_82 { void CWE476_NULL_Pointer_Dereference__class_82_goodG2B :: action ( TwoIntsClass * data ) { printIntLine ( data . intOne ) ; delete data ; } } ",
+      "num_checks": 27,
+      "errs": [
+        ""
+      ]
+    }
+  },
+  "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82a.cpp": {
+    "": {
+      "toks": "namespace CWE476_NULL_Pointer_Dereference__class_82 { class CWE476_NULL_Pointer_Dereference__class_82_base { public: virtual void action ( TwoIntsClass * data ) = 0 ; } ; class CWE476_NULL_Pointer_Dereference__class_82_bad : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; class CWE476_NULL_Pointer_Dereference__class_82_goodG2B : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; class CWE476_NULL_Pointer_Dereference__class_82_goodB2G : public CWE476_NULL_Pointer_Dereference__class_82_base { public: void action ( TwoIntsClass * data ) ; } ; } namespace CWE476_NULL_Pointer_Dereference__class_82 { void bad ( ) { TwoIntsClass * data ; data = NULL ; CWE476_NULL_Pointer_Dereference__class_82_base * baseObject ; baseObject = new CWE476_NULL_Pointer_Dereference__class_82_bad ; baseObject . action ( data ) ; delete baseObject ; } static void goodG2B ( ) { TwoIntsClass * data ; { TwoIntsClass * tmpData ; tmpData = new TwoIntsClass ; tmpData . intOne = 0 ; tmpData . intTwo = 0 ; data = tmpData ; } CWE476_NULL_Pointer_Dereference__class_82_base * baseObject ; baseObject = new CWE476_NULL_Pointer_Dereference__class_82_goodG2B ; baseObject . action ( data ) ; delete baseObject ; } static void goodB2G ( ) { TwoIntsClass * data ; data = NULL ; CWE476_NULL_Pointer_Dereference__class_82_base * baseObject ; baseObject = new CWE476_NULL_Pointer_Dereference__class_82_goodB2G ; baseObject . action ( data ) ; delete baseObject ; } void good ( ) { goodG2B ( ) ; goodB2G ( ) ; } } using namespace CWE476_NULL_Pointer_Dereference__class_82 ; int main ( int argc , char * argv [ ] ) { srand ( ( int ) time ( NULL ) ) ; printLine ( \"Calling good()...\" ) ; good ( ) ; printLine ( \"Finished good()\" ) ; printLine ( \"Calling bad()...\" ) ; bad ( ) ; printLine ( \"Finished bad()\" ) ; return 0 ; } ",
+      "errs": [
+        "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82.h:23:1: error: Class 'CWE476_NULL_Pointer_Dereference__class_82_base' which is inherited by class 'CWE476_NULL_Pointer_Dereference__class_82_goodB2G' does not have a virtual destructor. [virtualDestructor]|%$%|class CWE476_NULL_Pointer_Dereference__class_82_base|%$%|^"
+      ],
+      "num_checks": 27
+    }
+  }
+}
