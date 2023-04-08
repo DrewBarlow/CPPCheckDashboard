@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="mockup.css">
+  </head>
+  <body>
+    <div class="dropdown">
+      <button onclick="dropdownFxn()" class="dropbtn">Select File</button>
+      <div id="myDropdown" class="dropdown-content">
+        <a href="#">file_1.cpp</a>
+        <a href="#">file_2.cpp</a>
+        <a href="#">...</a>
+        <a href="#">file_n.cpp</a>
+      </div>
+    </div>
+    <table class="outer">
+      <p style="font-size: 1px;">&emsp;</h1>
+      <table class="inner" style="float: left">
+        <thead></thead>
+        <tr><td class="checkedNoErr">#include &lt;iostream&gt;</td></tr>
+        <tr><td>&nbsp;</td></tr>
+        <tr>
+          <td class="notChecked">// simple invalid free  ▼</td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <tr><td class="checkedNoErr">int main() {</td></tr>
+        <tr><td class="checkedNoErr">&emsp;std::cout &lt;&lt; "invalid free incoming" &lt;&lt; std::endl;</td></tr>
+        <tr><td class="checkedNoErr">&emsp;int* ptr = nullptr;</td></tr>
+        <tr>
+          <td class="checkedErr">&emsp;delete ptr;  ▼</td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <tr><td class="checkedNoErr">&emsp;return 0;</td></tr>
+        <tr><td class="checkedNoErr">}</td></tr>
+      </table>
+      <table style="float: left"><tr><td>&emsp;</td></tr></table>
+      <table class="inner" style="float: left">
+        <thead></thead>
+        <tr><td class="checkedNoErr">Covered, no error.</td></tr>
+        <tr><td class="checkedErr">Covered with error.</td></tr>
+        <tr><td class="notChecked">Not covered.</td></tr>
+      </table>
+      <table style="float: left"><tr><td>&emsp;</td></tr></table>
+      <table class="inner" style="float: below">
+        <thead></thead>
+        <tr><td>LOC Total: 8</td></tr>
+        <tr><td>Issues: 1</td></tr>
+        <tr><td>LOC Not Analyzed: 1</td></tr>
+      </table>
+      <table style="float: left"><tr><td>&emsp;</td></tr></table>
+      <button onclick="infoDropdown2()" class="infoBox2">▼</button>
+      <div id="info2" class="info2-content">
+        <p>Invalid free. [etc. etc. etc.]</p>
+      </div>
+      <button onclick="infoDropdown1()" class="infoBox1">▼</button>
+      <div id="info1" class="info1-content">
+        <p>This line is a comment.</p>
+      </div>
+      <div style="clear: both"></div>
+      <p>&emsp;&emsp;Ran 100% of checks.</p>
+    </table>
+    <script src="mockup.js"></script>
+  </body>
+</html>

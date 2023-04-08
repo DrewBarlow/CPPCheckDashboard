@@ -1,11 +1,13 @@
 from .loading import LoadingIcon
 from re import Match, match
 from subprocess import check_output, STDOUT
-from sys import stdout
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
-PATTERN_FILE_NAME_NO_CONFIG: str = r"^Checking \w+/\w+.cpp ...$"
-PATTERN_FILE_NAME_WITH_CONFIG: str = r"^Checking \w+/\w+.cpp: \w+...$"
+NUM_ERROR_LINES: int = 3
+PATTERN_FILE_PATH: str = r"(.*?\.[\w:]+)"
+PATTERN_ERROR: str = fr"^{PATTERN_FILE_PATH}:\d+:\d+: error:"
+PATTERN_FILE_NAME_NO_CONFIG: str = fr"^Checking {PATTERN_FILE_PATH} ...$"
+PATTERN_FILE_NAME_WITH_CONFIG: str = r"^Checking {PATTERN_FILE_PATH}: \w+...$"
 PATTERN_NUM_CONFIGS: str = r"^~~~ NUMBER OF PREPROCESSOR CONFIGS: \d+ ~~~$"
 PATTERN_FILE_TOKENS: str = r"^~~~ FILE TOKENS: ~~~$"
 PATTERN_NUM_CHECKS: str = r"^~~~ Ran \d+ checks for this above chunk ~~~$"
@@ -25,7 +27,7 @@ def analyze(path_to_analyzer: str, cmd_args: str, /, *, to_stdout: bool=False) -
     """
     output_raw: Union[bytes, None] = None
     stdout: str = ""
-    parsed: Dict[str, Dict[str, Dict[str, Union[int, str]]]] = {}
+    parsed: Dict[str, Dict[str, Dict[str, int|str|List[str] ]]] = {}
     
     with LoadingIcon(f"Running {path_to_analyzer} {cmd_args}..."):
         output_raw = check_output(f"{path_to_analyzer} {cmd_args}", stderr=STDOUT, shell=True)
@@ -33,9 +35,13 @@ def analyze(path_to_analyzer: str, cmd_args: str, /, *, to_stdout: bool=False) -
     with LoadingIcon("Parsing output..."):
         stdout = output_raw.decode()
         parsed = _parse_stdout(stdout)
+        print(parsed)
+        _condense_errors(parsed)
 
     for i, (file_path, config_dict) in enumerate(parsed.items()):
         for config_name, info in config_dict.items():
+            if info.get("toks") is None:
+                print(file_path, config_name)
             if not toks_match_source(file_path, info["toks"]):
                 print("You should not see this yet.")
             
@@ -59,7 +65,7 @@ def toks_match_source(file_path: str, toks: str) -> bool:
     """
     return True
 
-def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, Union[int, str]]]]:
+def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, int|str|List[str] ]]]:
     """
     Accepts a '\n'-separated string and parses it into a usable dictionary.
     The string is intended to be the decoded stdout of a static analysis run.
@@ -73,24 +79,33 @@ def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, Union[int, str]]
             "path/to/file": {
                 "preprocessor-config-name": {
                     "toks": "string-of-file-tokens",
-                    "num_checks": number-of-checks-for-chunk (should be 27)
+                    "num_checks": number-of-checks-for-chunk (should be 27),
+                    "errs": ["list", "of", "errors"]
                 }, ... 
             }, ...
         }
     """
-    parsed: Dict[str, Dict[str, Dict[str, Union[int, str]]]] = {}
+    parsed: Dict[str, Dict[str, Dict[str, int|str|List[str] ]]] = {}
     stdout_split: List[str] = stdout.split('\n')
 
     is_next_line_toks: bool = False
+    num_err_lines_remaining: int = 0
     curr_fname: str = ""
     curr_config: str = ""
 
     for line in stdout_split:
-        no_config: Match = match(PATTERN_FILE_NAME_NO_CONFIG, line)
-        with_config: Match = match(PATTERN_FILE_NAME_WITH_CONFIG, line)
+        print(parsed.keys())
+        no_config: Optional[Match[str]] = match(PATTERN_FILE_NAME_NO_CONFIG, line)
+        with_config: Optional[Match[str]] = match(PATTERN_FILE_NAME_WITH_CONFIG, line)
+
+        # it can be assumed that if this value is anything but 0, we already have a dictionary entry
+        # this must take first priority, as we want to ignore potential pattern collisions when an err is present
+        if num_err_lines_remaining > 0:
+            parsed[curr_fname][curr_config]["errs"].append(line)
+            num_err_lines_remaining -= 1
 
         # a filename is present but a preprocessor config is not
-        if no_config:
+        elif no_config:
             split_fname: List[str] = line.split(' ')[1:-1]
             curr_fname = ' '.join(split_fname)
             curr_config = ""
@@ -107,17 +122,26 @@ def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, Union[int, str]]
                 parsed[curr_fname] = {}
             parsed[curr_fname][curr_config] = {}
 
+        elif match(PATTERN_FILE_TOKENS, line):
+            is_next_line_toks = True
+            
+        # depends on the previous elif
         elif is_next_line_toks:
             parsed[curr_fname][curr_config]["toks"] = line
             is_next_line_toks = False
-        
-        elif match(PATTERN_FILE_TOKENS, line):
-            is_next_line_toks = True
             
         elif match(PATTERN_NUM_CHECKS, line):
             num_with_excess: str = line.split("Ran")[1]
             num_checks: int = int(num_with_excess.split("checks")[0])
             parsed[curr_fname][curr_config]["num_checks"] = num_checks
 
+        elif match(PATTERN_ERROR, line):
+            num_err_lines_remaining = NUM_ERROR_LINES - 1
+            parsed[curr_fname][curr_config]["errs"] = [line]
+
     return parsed
+
+def _condense_errors(parsed: Dict[str, Dict[str, Dict[str, int|str|List[str] ]]]) -> None:
+
+    return
 

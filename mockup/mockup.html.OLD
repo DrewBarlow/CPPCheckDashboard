@@ -17,13 +17,17 @@
         border: 2px solid black;
         font-size: 24px;
       }
+      .inner {
+        border: 2px solid black;
+        font-size: 24px;
+      }
     </style>
   </head>
 
   <body>
     <table class="outer">
-      <h1>simple.cpp</h1>
-      <table class="inner">
+      <h1>simple.cpp | file1.cpp | file2.cpp | ... | filen.cpp</h1>
+      <table class="inner" style="float: left">
         <thead></thead>
         <tr><td class="checkedNoErr">#include &lt;iostream&gt;</td></tr>
         <tr><td>&nbsp;</td></tr>
@@ -37,7 +41,22 @@
         <tr><td class="checkedNoErr">&emsp;return 0;</td></tr>
         <tr><td class="checkedNoErr">}</td></tr>
       </table>
+      <table style="float: left"><tr><td>&emsp;</td></tr></table>
+      <table class="inner" style="float: left">
+        <thead></thead>
+        <tr><td class="checkedNoErr">Covered, no error.</td></tr>
+        <tr><td class="checkedErr">Covered with error.</td></tr>
+        <tr><td class="notChecked">Not covered.</td></tr>
+      </table>
+      <table style="float: left"><tr><td>&emsp;</td></tr></table>
+      <table class="inner" style="float: below">
+        <thead></thead>
+        <tr><td>LOC Total: 8</td></tr>
+        <tr><td>Issues: 1</td></tr>
+        <tr><td>LOC Not Analyzed: 1</td></tr>
+      </table>
+      <div style="clear: both"></div>
+      <p>&emsp;&emsp;Ran 100% of checks.</p>
     </table>
-    <p>&emsp;&emsp;Ran 100% of checks.</p>
   </body>
 </html>

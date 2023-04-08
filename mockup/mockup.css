@@ -1,0 +1,97 @@
+html * {
+  font-family: "Courier New", Courier, monospace; 
+  font-weight: 700;
+  line-height: 26.4px;
+} 
+
+h1 {
+  font-size: 31px;
+}
+
+p {
+  font-size: 18px;
+}
+
+.checkedNoErr {
+  background: #B0FFAD;
+}
+
+.notChecked {
+  background: #FFDEAD;
+}
+
+.checkedErr {
+  background: #FFADAD;
+}
+
+.outer {
+  border: 1px solid #000000;
+}
+
+.inner {
+  border: 2px solid black;
+  font-size: 24px;
+}
+
+.dropbtn {
+  background-color: #AAAAAA;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: 2px solid;
+  cursor: pointer;
+}
+
+.infoBox1 {
+  background-color: #FFFFFF;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.infoBox2 {
+  background-color: #FFFFFF;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9;
+}
+
+.dropdown, .notChecked, .checkedErr {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content, .info1-content, .info2-content {
+  display: none;
+  position: absolute;
+  background-color: #FFFFFF;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border: 1px solid;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  border: 1px dotted;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+  display: block;
+}
