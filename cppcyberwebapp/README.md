@@ -4,8 +4,6 @@ Front End Design of the Web Application
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
 #first clone my branches repo
 
