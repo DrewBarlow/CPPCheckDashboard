@@ -87,7 +87,7 @@ def _parse_dump(analyzed_file_path: str, parsed: Dict[str, Dict[str, Dict[str, i
     for dump in dump_xml.getroot().findall("dump"):
         config_name: str = dump.attrib["cfg"]
         tokens_raw: List[ET.Element] = dump.find("tokenlist").findall("token")
-        tokens: Set[int] = {int(token.attrib["linenr"]) for token in tokens_raw}
+        tokens: Set[int] = {int(token.attrib["linenr"]) for token in tokens_raw if token.attrib["file"].split('.')[-1] != 'h'}
         parsed[analyzed_file_path][config_name]["tokenized_lines"] = list(tokens)
 
     return
