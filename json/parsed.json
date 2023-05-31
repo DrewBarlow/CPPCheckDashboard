@@ -1,0 +1,14 @@
+{
+  "test/hello.h": {
+    "": {
+      "toks": "void hello ( ) { return ; } ",
+      "num_checks": 27,
+      "errs": [],
+      "tokenized_lines": [
+        4,
+        5,
+        6
+      ]
+    }
+  }
+}
