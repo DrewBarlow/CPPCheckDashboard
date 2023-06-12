@@ -2,7 +2,10 @@
   "sard/CWE415_Double_Free/CWE415_Double_Free__malloc_free_struct_42.c": {
     "token": {
       "num_checks": 27,
-      "preprocessor_config": ["r", "INCLUDEMAIN"]
+      "preprocessor_config": [
+        "",
+        "INCLUDEMAIN"
+      ]
     },
     "data": {
       "1": {
@@ -193,9 +196,9 @@
       },
       "32": {
         "code": "    return data;",
-        "message": "Returning/dereferencing 'data' after it is deallocated / released [deallocret]|%$%|    return data;|%$%|    ^",
+        "message": "",
         "Checked": true,
-        "error": true
+        "error": false
       },
       "33": {
         "code": "}",
@@ -598,7 +601,9 @@
   "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82_bad.cpp": {
     "token": {
       "num_checks": 27,
-      "preprocessor_config": [""]
+      "preprocessor_config": [
+        ""
+      ]
     },
     "data": {
       "1": {
@@ -718,13 +723,13 @@
       "20": {
         "code": "#include \"CWE476_NULL_Pointer_Dereference__class_82.h\"",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "21": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "22": {
@@ -742,7 +747,7 @@
       "24": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "25": {
@@ -760,7 +765,7 @@
       "27": {
         "code": "    /* POTENTIAL FLAW: Attempt to use data, which may be NULL */",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "28": {
@@ -790,7 +795,7 @@
       "32": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "33": {
@@ -802,7 +807,7 @@
       "34": {
         "code": "#endif /* OMITBAD */",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       }
     }
@@ -810,7 +815,9 @@
   "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82_goodB2G.cpp": {
     "token": {
       "num_checks": 27,
-      "preprocessor_config": [""]
+      "preprocessor_config": [
+        ""
+      ]
     },
     "data": {
       "1": {
@@ -930,13 +937,13 @@
       "20": {
         "code": "#include \"CWE476_NULL_Pointer_Dereference__class_82.h\"",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "21": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "22": {
@@ -954,7 +961,7 @@
       "24": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "25": {
@@ -972,7 +979,7 @@
       "27": {
         "code": "    /* FIX: Check for NULL before attempting to print data */",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "28": {
@@ -1058,7 +1065,9 @@
   "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82_goodG2B.cpp": {
     "token": {
       "num_checks": 27,
-      "preprocessor_config": [""]
+      "preprocessor_config": [
+        ""
+      ]
     },
     "data": {
       "1": {
@@ -1178,13 +1187,13 @@
       "20": {
         "code": "#include \"CWE476_NULL_Pointer_Dereference__class_82.h\"",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "21": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "22": {
@@ -1202,7 +1211,7 @@
       "24": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "25": {
@@ -1220,7 +1229,7 @@
       "27": {
         "code": "    /* POTENTIAL FLAW: Attempt to use data, which may be NULL */",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "28": {
@@ -1250,7 +1259,7 @@
       "32": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "33": {
@@ -1262,7 +1271,7 @@
       "34": {
         "code": "#endif /* OMITGOOD */",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       }
     }
@@ -1270,7 +1279,10 @@
   "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82a.cpp": {
     "token": {
       "num_checks": 27,
-      "preprocessor_config": ["", "INCLUDEMAIN"]
+      "preprocessor_config": [
+        "",
+        "INCLUDEMAIN"
+      ]
     },
     "data": {
       "1": {
@@ -1390,7 +1402,7 @@
       "20": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "21": {
@@ -1408,19 +1420,19 @@
       "23": {
         "code": "",
         "message": "Class 'CWE476_NULL_Pointer_Dereference__class_82_base' which is inherited by class 'CWE476_NULL_Pointer_Dereference__class_82_goodB2G' does not have a virtual destructor. [virtualDestructor]|%$%|class CWE476_NULL_Pointer_Dereference__class_82_base|%$%|^",
-        "Checked": true,
+        "Checked": false,
         "error": true
       },
       "24": {
         "code": "#ifndef OMITBAD",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "25": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "26": {
@@ -1480,13 +1492,13 @@
       "35": {
         "code": "",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "36": {
         "code": "#endif /* OMITBAD */",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "37": {
@@ -1558,7 +1570,7 @@
       "48": {
         "code": "        /* FIX: Initialize data */",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "49": {
@@ -1606,7 +1618,7 @@
       "56": {
         "code": "/* goodB2G uses the BadSource with the GoodSink */",
         "message": "",
-        "Checked": true,
+        "Checked": false,
         "error": false
       },
       "57": {

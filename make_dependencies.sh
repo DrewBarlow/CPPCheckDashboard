@@ -1,5 +1,5 @@
 cd sa_coverage/cppcheck
 make
-cd ..
+cd ../..
 
 pip3 install -r requirements.txt
