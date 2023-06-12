@@ -1,0 +1,1896 @@
+{
+  "sard/CWE415_Double_Free/CWE415_Double_Free__malloc_free_struct_42.c": {
+    "token": {
+      "num_checks": 27,
+      "preprocessor_config": ["r", "INCLUDEMAIN"]
+    },
+    "data": {
+      "1": {
+        "code": "#ifndef OMITBAD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "2": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "3": {
+        "code": "static twoIntsStruct * badSource(twoIntsStruct * data)",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "4": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "5": {
+        "code": "    data = (twoIntsStruct *)malloc(100*sizeof(twoIntsStruct));",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "6": {
+        "code": "    if (data == NULL) {exit(-1);}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "7": {
+        "code": "    /* POTENTIAL FLAW: Free data in the source - the bad sink frees data as well */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "8": {
+        "code": "    free(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "9": {
+        "code": "    return data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "10": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "11": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "12": {
+        "code": "void CWE415_Double_Free__malloc_free_struct_42_bad()",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "13": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "14": {
+        "code": "    twoIntsStruct * data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "15": {
+        "code": "    /* Initialize data */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "16": {
+        "code": "    data = NULL;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "17": {
+        "code": "    data = badSource(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "18": {
+        "code": "    /* POTENTIAL FLAW: Possibly freeing memory twice */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "19": {
+        "code": "    free(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "20": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "21": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "22": {
+        "code": "#endif /* OMITBAD */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "23": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "24": {
+        "code": "#ifndef OMITGOOD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "25": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "26": {
+        "code": "/* goodG2B uses the GoodSource with the BadSink */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "27": {
+        "code": "static twoIntsStruct * goodG2BSource(twoIntsStruct * data)",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "28": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "29": {
+        "code": "    data = (twoIntsStruct *)malloc(100*sizeof(twoIntsStruct));",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "30": {
+        "code": "    if (data == NULL) {exit(-1);}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "31": {
+        "code": "    /* FIX: Do NOT free data in the source - the bad sink frees data */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "32": {
+        "code": "    return data;",
+        "message": "Returning/dereferencing 'data' after it is deallocated / released [deallocret]|%$%|    return data;|%$%|    ^",
+        "Checked": true,
+        "error": true
+      },
+      "33": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "34": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "35": {
+        "code": "static void goodG2B()",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "36": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "37": {
+        "code": "    twoIntsStruct * data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "38": {
+        "code": "    /* Initialize data */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "39": {
+        "code": "    data = NULL;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "40": {
+        "code": "    data = goodG2BSource(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "41": {
+        "code": "    /* POTENTIAL FLAW: Possibly freeing memory twice */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "42": {
+        "code": "    free(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "43": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "44": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "45": {
+        "code": "/* goodB2G uses the BadSource with the GoodSink */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "46": {
+        "code": "static twoIntsStruct * goodB2GSource(twoIntsStruct * data)",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "47": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "48": {
+        "code": "    data = (twoIntsStruct *)malloc(100*sizeof(twoIntsStruct));",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "49": {
+        "code": "    if (data == NULL) {exit(-1);}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "50": {
+        "code": "    /* POTENTIAL FLAW: Free data in the source - the bad sink frees data as well */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "51": {
+        "code": "    free(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "52": {
+        "code": "    return data;",
+        "message": "Returning/dereferencing 'data' after it is deallocated / released [deallocret]|%$%|    return data;|%$%|    ^",
+        "Checked": true,
+        "error": true
+      },
+      "53": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "54": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "55": {
+        "code": "static void goodB2G()",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "56": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "57": {
+        "code": "    twoIntsStruct * data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "58": {
+        "code": "    /* Initialize data */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "59": {
+        "code": "    data = NULL;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "60": {
+        "code": "    data = goodB2GSource(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "61": {
+        "code": "    /* do nothing */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "62": {
+        "code": "    /* FIX: Don't attempt to free the memory */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "63": {
+        "code": "    ; /* empty statement needed for some flow variants */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "64": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "65": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "66": {
+        "code": "void CWE415_Double_Free__malloc_free_struct_42_good()",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "67": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "68": {
+        "code": "    goodB2G();",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "69": {
+        "code": "    goodG2B();",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "70": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "71": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "72": {
+        "code": "#endif /* OMITGOOD */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "73": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "74": {
+        "code": "/* Below is the main(). It is only used when building this testcase on",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "75": {
+        "code": "   its own for testing or for building a binary to use in testing binary",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "76": {
+        "code": "   analysis tools. It is not used when compiling all the testcases as one",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "77": {
+        "code": "   application, which is how source code analysis tools are tested. */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "78": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "79": {
+        "code": "#ifdef INCLUDEMAIN",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "80": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "81": {
+        "code": "int main(int argc, char * argv[])",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "82": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "83": {
+        "code": "    /* seed randomness */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "84": {
+        "code": "    srand( (unsigned)time(NULL) );",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "85": {
+        "code": "#ifndef OMITGOOD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "86": {
+        "code": "    printLine(\"Calling good()...\");",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "87": {
+        "code": "    CWE415_Double_Free__malloc_free_struct_42_good();",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "88": {
+        "code": "    printLine(\"Finished good()\");",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "89": {
+        "code": "#endif /* OMITGOOD */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "90": {
+        "code": "#ifndef OMITBAD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "91": {
+        "code": "    printLine(\"Calling bad()...\");",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "92": {
+        "code": "    CWE415_Double_Free__malloc_free_struct_42_bad();",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "93": {
+        "code": "    printLine(\"Finished bad()\");",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "94": {
+        "code": "#endif /* OMITBAD */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "95": {
+        "code": "    return 0;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "96": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "97": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "98": {
+        "code": "#endif",
+        "message": "",
+        "Checked": false,
+        "error": false
+      }
+    }
+  },
+  "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82_bad.cpp": {
+    "token": {
+      "num_checks": 27,
+      "preprocessor_config": [""]
+    },
+    "data": {
+      "1": {
+        "code": "/* TEMPLATE GENERATED TESTCASE FILE",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "2": {
+        "code": "Filename: CWE476_NULL_Pointer_Dereference__class_82_bad.cpp",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "3": {
+        "code": "Label Definition File: CWE476_NULL_Pointer_Dereference__class.label.xml",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "4": {
+        "code": "Template File: sources-sinks-82_bad.tmpl.cpp",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "5": {
+        "code": "*/",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "6": {
+        "code": "/*",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "7": {
+        "code": " * @description",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "8": {
+        "code": " * CWE: 476 NULL Pointer Dereference",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "9": {
+        "code": " * BadSource:  Set data to NULL",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "10": {
+        "code": " * GoodSource: Initialize data",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "11": {
+        "code": " * Sinks:",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "12": {
+        "code": " *    GoodSink: Check data for NULL before attempting to print data->a",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "13": {
+        "code": " *    BadSink : Print data->a",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "14": {
+        "code": " * Flow Variant: 82 Data flow: data passed in a parameter to an virtual method called via a pointer",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "15": {
+        "code": " *",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "16": {
+        "code": " * */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "17": {
+        "code": "#ifndef OMITBAD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "18": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "19": {
+        "code": "#include \"std_testcase.h\"",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "20": {
+        "code": "#include \"CWE476_NULL_Pointer_Dereference__class_82.h\"",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "21": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "22": {
+        "code": "namespace CWE476_NULL_Pointer_Dereference__class_82",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "23": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "24": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "25": {
+        "code": "void CWE476_NULL_Pointer_Dereference__class_82_bad::action(TwoIntsClass * data)",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "26": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "27": {
+        "code": "    /* POTENTIAL FLAW: Attempt to use data, which may be NULL */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "28": {
+        "code": "    printIntLine(data->intOne);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "29": {
+        "code": "    /* avoid memory leak - deleting a NULL pointer is a no-op in C++ so no need to check for NULL */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "30": {
+        "code": "    delete data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "31": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "32": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "33": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "34": {
+        "code": "#endif /* OMITBAD */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      }
+    }
+  },
+  "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82_goodB2G.cpp": {
+    "token": {
+      "num_checks": 27,
+      "preprocessor_config": [""]
+    },
+    "data": {
+      "1": {
+        "code": "/* TEMPLATE GENERATED TESTCASE FILE",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "2": {
+        "code": "Filename: CWE476_NULL_Pointer_Dereference__class_82_goodB2G.cpp",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "3": {
+        "code": "Label Definition File: CWE476_NULL_Pointer_Dereference__class.label.xml",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "4": {
+        "code": "Template File: sources-sinks-82_goodB2G.tmpl.cpp",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "5": {
+        "code": "*/",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "6": {
+        "code": "/*",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "7": {
+        "code": " * @description",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "8": {
+        "code": " * CWE: 476 NULL Pointer Dereference",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "9": {
+        "code": " * BadSource:  Set data to NULL",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "10": {
+        "code": " * GoodSource: Initialize data",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "11": {
+        "code": " * Sinks:",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "12": {
+        "code": " *    GoodSink: Check data for NULL before attempting to print data->a",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "13": {
+        "code": " *    BadSink : Print data->a",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "14": {
+        "code": " * Flow Variant: 82 Data flow: data passed in a parameter to an virtual method called via a pointer",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "15": {
+        "code": " *",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "16": {
+        "code": " * */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "17": {
+        "code": "#ifndef OMITGOOD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "18": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "19": {
+        "code": "#include \"std_testcase.h\"",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "20": {
+        "code": "#include \"CWE476_NULL_Pointer_Dereference__class_82.h\"",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "21": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "22": {
+        "code": "namespace CWE476_NULL_Pointer_Dereference__class_82",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "23": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "24": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "25": {
+        "code": "void CWE476_NULL_Pointer_Dereference__class_82_goodB2G::action(TwoIntsClass * data)",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "26": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "27": {
+        "code": "    /* FIX: Check for NULL before attempting to print data */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "28": {
+        "code": "    if (data != NULL)",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "29": {
+        "code": "    {",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "30": {
+        "code": "        printIntLine(data->intOne);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "31": {
+        "code": "        delete data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "32": {
+        "code": "    }",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "33": {
+        "code": "    else",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "34": {
+        "code": "    {",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "35": {
+        "code": "        printLine(\"data is NULL\");",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "36": {
+        "code": "    }",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "37": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "38": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "39": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "40": {
+        "code": "#endif /* OMITGOOD */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      }
+    }
+  },
+  "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82_goodG2B.cpp": {
+    "token": {
+      "num_checks": 27,
+      "preprocessor_config": [""]
+    },
+    "data": {
+      "1": {
+        "code": "/* TEMPLATE GENERATED TESTCASE FILE",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "2": {
+        "code": "Filename: CWE476_NULL_Pointer_Dereference__class_82_goodG2B.cpp",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "3": {
+        "code": "Label Definition File: CWE476_NULL_Pointer_Dereference__class.label.xml",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "4": {
+        "code": "Template File: sources-sinks-82_goodG2B.tmpl.cpp",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "5": {
+        "code": "*/",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "6": {
+        "code": "/*",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "7": {
+        "code": " * @description",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "8": {
+        "code": " * CWE: 476 NULL Pointer Dereference",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "9": {
+        "code": " * BadSource:  Set data to NULL",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "10": {
+        "code": " * GoodSource: Initialize data",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "11": {
+        "code": " * Sinks:",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "12": {
+        "code": " *    GoodSink: Check data for NULL before attempting to print data->a",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "13": {
+        "code": " *    BadSink : Print data->a",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "14": {
+        "code": " * Flow Variant: 82 Data flow: data passed in a parameter to an virtual method called via a pointer",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "15": {
+        "code": " *",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "16": {
+        "code": " * */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "17": {
+        "code": "#ifndef OMITGOOD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "18": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "19": {
+        "code": "#include \"std_testcase.h\"",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "20": {
+        "code": "#include \"CWE476_NULL_Pointer_Dereference__class_82.h\"",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "21": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "22": {
+        "code": "namespace CWE476_NULL_Pointer_Dereference__class_82",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "23": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "24": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "25": {
+        "code": "void CWE476_NULL_Pointer_Dereference__class_82_goodG2B::action(TwoIntsClass * data)",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "26": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "27": {
+        "code": "    /* POTENTIAL FLAW: Attempt to use data, which may be NULL */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "28": {
+        "code": "    printIntLine(data->intOne);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "29": {
+        "code": "    /* avoid memory leak - deleting a NULL pointer is a no-op in C++ so no need to check for NULL */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "30": {
+        "code": "    delete data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "31": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "32": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "33": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "34": {
+        "code": "#endif /* OMITGOOD */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      }
+    }
+  },
+  "sard/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__class_82a.cpp": {
+    "token": {
+      "num_checks": 27,
+      "preprocessor_config": ["", "INCLUDEMAIN"]
+    },
+    "data": {
+      "1": {
+        "code": "/* TEMPLATE GENERATED TESTCASE FILE",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "2": {
+        "code": "Filename: CWE476_NULL_Pointer_Dereference__class_82a.cpp",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "3": {
+        "code": "Label Definition File: CWE476_NULL_Pointer_Dereference__class.label.xml",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "4": {
+        "code": "Template File: sources-sinks-82a.tmpl.cpp",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "5": {
+        "code": "*/",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "6": {
+        "code": "/*",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "7": {
+        "code": " * @description",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "8": {
+        "code": " * CWE: 476 NULL Pointer Dereference",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "9": {
+        "code": " * BadSource:  Set data to NULL",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "10": {
+        "code": " * GoodSource: Initialize data",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "11": {
+        "code": " * Sinks:",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "12": {
+        "code": " *    GoodSink: Check data for NULL before attempting to print data->a",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "13": {
+        "code": " *    BadSink : Print data->a",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "14": {
+        "code": " * Flow Variant: 82 Data flow: data passed in a parameter to an virtual method called via a pointer",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "15": {
+        "code": " *",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "16": {
+        "code": " * */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "17": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "18": {
+        "code": "#include \"std_testcase.h\"",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "19": {
+        "code": "#include \"CWE476_NULL_Pointer_Dereference__class_82.h\"",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "20": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "21": {
+        "code": "namespace CWE476_NULL_Pointer_Dereference__class_82",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "22": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "23": {
+        "code": "",
+        "message": "Class 'CWE476_NULL_Pointer_Dereference__class_82_base' which is inherited by class 'CWE476_NULL_Pointer_Dereference__class_82_goodB2G' does not have a virtual destructor. [virtualDestructor]|%$%|class CWE476_NULL_Pointer_Dereference__class_82_base|%$%|^",
+        "Checked": true,
+        "error": true
+      },
+      "24": {
+        "code": "#ifndef OMITBAD",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "25": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "26": {
+        "code": "void bad()",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "27": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "28": {
+        "code": "    TwoIntsClass * data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "29": {
+        "code": "    /* POTENTIAL FLAW: Set data to NULL */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "30": {
+        "code": "    data = NULL;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "31": {
+        "code": "    CWE476_NULL_Pointer_Dereference__class_82_base* baseObject = new CWE476_NULL_Pointer_Dereference__class_82_bad;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "32": {
+        "code": "    baseObject->action(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "33": {
+        "code": "    delete baseObject;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "34": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "35": {
+        "code": "",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "36": {
+        "code": "#endif /* OMITBAD */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "37": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "38": {
+        "code": "#ifndef OMITGOOD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "39": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "40": {
+        "code": "/* goodG2B uses the GoodSource with the BadSink */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "41": {
+        "code": "static void goodG2B()",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "42": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "43": {
+        "code": "    TwoIntsClass * data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "44": {
+        "code": "    {",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "45": {
+        "code": "        TwoIntsClass * tmpData = new TwoIntsClass;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "46": {
+        "code": "        tmpData->intOne = 0;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "47": {
+        "code": "        tmpData->intTwo = 0;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "48": {
+        "code": "        /* FIX: Initialize data */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "49": {
+        "code": "        data = tmpData;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "50": {
+        "code": "    }",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "51": {
+        "code": "    CWE476_NULL_Pointer_Dereference__class_82_base* baseObject = new CWE476_NULL_Pointer_Dereference__class_82_goodG2B;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "52": {
+        "code": "    baseObject->action(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "53": {
+        "code": "    delete baseObject;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "54": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "55": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "56": {
+        "code": "/* goodB2G uses the BadSource with the GoodSink */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "57": {
+        "code": "static void goodB2G()",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "58": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "59": {
+        "code": "    TwoIntsClass * data;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "60": {
+        "code": "    /* POTENTIAL FLAW: Set data to NULL */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "61": {
+        "code": "    data = NULL;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "62": {
+        "code": "    CWE476_NULL_Pointer_Dereference__class_82_base* baseObject = new CWE476_NULL_Pointer_Dereference__class_82_goodB2G;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "63": {
+        "code": "    baseObject->action(data);",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "64": {
+        "code": "    delete baseObject;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "65": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "66": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "67": {
+        "code": "void good()",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "68": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "69": {
+        "code": "    goodG2B();",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "70": {
+        "code": "    goodB2G();",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "71": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "72": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "73": {
+        "code": "#endif /* OMITGOOD */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "74": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "75": {
+        "code": "} /* close namespace */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "76": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "77": {
+        "code": "/* Below is the main(). It is only used when building this testcase on",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "78": {
+        "code": "   its own for testing or for building a binary to use in testing binary",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "79": {
+        "code": "   analysis tools. It is not used when compiling all the testcases as one",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "80": {
+        "code": "   application, which is how source code analysis tools are tested. */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "81": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "82": {
+        "code": "#ifdef INCLUDEMAIN",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "83": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "84": {
+        "code": "using namespace CWE476_NULL_Pointer_Dereference__class_82; /* so that we can use good and bad easily */",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "85": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "86": {
+        "code": "int main(int argc, char * argv[])",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "87": {
+        "code": "{",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "88": {
+        "code": "    /* seed randomness */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "89": {
+        "code": "    srand( (unsigned)time(NULL) );",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "90": {
+        "code": "#ifndef OMITGOOD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "91": {
+        "code": "    printLine(\"Calling good()...\");",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "92": {
+        "code": "    good();",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "93": {
+        "code": "    printLine(\"Finished good()\");",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "94": {
+        "code": "#endif /* OMITGOOD */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "95": {
+        "code": "#ifndef OMITBAD",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "96": {
+        "code": "    printLine(\"Calling bad()...\");",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "97": {
+        "code": "    bad();",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "98": {
+        "code": "    printLine(\"Finished bad()\");",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "99": {
+        "code": "#endif /* OMITBAD */",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "100": {
+        "code": "    return 0;",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "101": {
+        "code": "}",
+        "message": "",
+        "Checked": true,
+        "error": false
+      },
+      "102": {
+        "code": "",
+        "message": "",
+        "Checked": false,
+        "error": false
+      },
+      "103": {
+        "code": "#endif",
+        "message": "",
+        "Checked": false,
+        "error": false
+      }
+    }
+  }
+}
