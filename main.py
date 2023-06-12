@@ -1,6 +1,26 @@
 import sa_coverage
 from argparse import ArgumentParser, Namespace
 from typing import List
+import subprocess
+
+
+def run_bash_script(script_path):
+    process = subprocess.Popen(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    
+    # Wait for the process to finish and capture the output
+    stdout, stderr = process.communicate()
+    
+    stdout = stdout.decode('utf-8')
+    stderr = stderr.decode('utf-8')
+    
+    # Print the output
+    print("Script output:")
+    print(stdout)
+    
+    if stderr:
+        print("Script errors:")
+        print(stderr)
+
 
 def main() -> None:
     parser: ArgumentParser = ArgumentParser()
@@ -18,5 +38,7 @@ def main() -> None:
     return
 
 if __name__ == "__main__":
+    run_bash_script("make_dependencies.sh")
     main()
+    run_bash_script("run_script.sh")
 
