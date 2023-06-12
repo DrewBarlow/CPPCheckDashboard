@@ -1,18 +1,22 @@
 from json import dumps
 from .loading import LoadingIcon
+from os import path, remove
 from re import Match, match
 from subprocess import check_output, STDOUT
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
+from xml.etree import ElementTree as ET
 
 DELIMITER: str = "|%$%|"
 NUM_ERROR_LINES: int = 2
 PATTERN_FILE_PATH: str = r"(.*?\.[\w:]+)"
 PATTERN_ERROR: str = fr"^{PATTERN_FILE_PATH}:\d+:\d+: error:"
 PATTERN_FILE_NAME_NO_CONFIG: str = fr"^Checking {PATTERN_FILE_PATH} ...$"
-PATTERN_FILE_NAME_WITH_CONFIG: str = r"^Checking {PATTERN_FILE_PATH}: \w+...$"
+PATTERN_FILE_NAME_WITH_CONFIG: str = fr"^Checking {PATTERN_FILE_PATH}: \w+...$"
 PATTERN_NUM_CONFIGS: str = r"^~~~ NUMBER OF PREPROCESSOR CONFIGS: \d+ ~~~$"
 PATTERN_FILE_TOKENS: str = r"^~~~ FILE TOKENS: ~~~$"
 PATTERN_NUM_CHECKS: str = r"^~~~ Ran \d+ checks for this above chunk ~~~$"
+EXT_CTU_INFO: str = ".ctu-info"
+EXT_DUMP: str = ".dump"
 
 def analyze(path_to_analyzer: str, cmd_args: str, *, fname: str) -> None:
     """
@@ -29,23 +33,63 @@ def analyze(path_to_analyzer: str, cmd_args: str, *, fname: str) -> None:
     """
     output_raw: Optional[bytes] = None
     stdout: str = ""
-    parsed: Dict[str, Dict[str, Dict[str, int|str|List[str] ]]] = {}
+    parsed: Dict[str, Dict[str, Dict[str, int|str|list ]]] = {}
     
     with LoadingIcon(f"Running {path_to_analyzer} {cmd_args}..."):
-        output_raw = check_output(f"{path_to_analyzer} {cmd_args}", stderr=STDOUT, shell=True)
+        output_raw = check_output(f"{path_to_analyzer} {cmd_args} --dump", stderr=STDOUT, shell=True)
 
     with LoadingIcon("Parsing output..."):
         stdout = output_raw.decode()
         parsed = _parse_stdout(stdout)
 
-    for i, (file_path, config_dict) in enumerate(parsed.items()):
+    for file_path, config_dict in parsed.items():
         for config_name, info in config_dict.items():
             if info.get("toks") is None:
                 print(file_path, config_name)
             if not toks_match_source(file_path, info["toks"]):
                 print("You should not see this yet.")
-            
+
+        _parse_dump(file_path, parsed)
+        remove(file_path + EXT_CTU_INFO)
+        remove(file_path + EXT_DUMP)
+
     _dump_parsed(fname, parsed)
+    return
+
+def _parse_dump(analyzed_file_path: str, parsed: Dict[str, Dict[str, Dict[str, int|str|list ]]]) -> None:
+    """
+    Accepts the path to an analyzed file, as well as the parsed stdout
+    of the run of CPPCheck.
+    Navigates to the dump path of that file and adds information about
+    which lines were tokenized to the dictionary.
+
+    Parameters:
+        analyzed_file_path (str): The path to an analyzed file.
+
+    Returns:
+        A dictionary of the following structure:
+        {
+            "path/to/file": {
+                "preprocessor-config-name": {
+                    "toks": "string-of-file-tokens",
+                    "num_checks": number-of-checks-for-chunk (should be 27),
+                    "errs": ["list", "of", "errors"],
+                    "tokenized_lines": [tokenized, line, numbers]
+                }, ... 
+            }, ...
+        }
+    """
+    dump_path: str = analyzed_file_path + EXT_DUMP
+    if not path.exists(dump_path):
+        return
+
+    dump_xml: ET.ElementTree = ET.parse(dump_path)
+    for dump in dump_xml.getroot().findall("dump"):
+        config_name: str = dump.attrib["cfg"]
+        tokens_raw: List[ET.Element] = dump.find("tokenlist").findall("token")
+        tokens: Set[int] = {int(token.attrib["linenr"]) for token in tokens_raw if token.attrib["file"] == '.'.join(dump_path.split('.')[:-1])}
+        parsed[analyzed_file_path][config_name]["tokenized_lines"] = list(tokens)
+
     return
 
 # TODO
@@ -66,7 +110,7 @@ def toks_match_source(file_path: str, toks: str) -> bool:
     """
     return True
 
-def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, int|str|List[str] ]]]:
+def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, int|str|list ]]]:
     """
     Accepts a '\n'-separated string and parses it into a usable dictionary.
     The string is intended to be the decoded stdout of a static analysis run.
@@ -86,7 +130,7 @@ def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, int|str|List[str
             }, ...
         }
     """
-    parsed: Dict[str, Dict[str, Dict[str, int|str|List[str] ]]] = {}
+    parsed: Dict[str, Dict[str, Dict[str, int|str|list ]]] = {}
     stdout_split: List[str] = stdout.split('\n')
 
     is_next_line_toks: bool = False
@@ -144,11 +188,11 @@ def _parse_stdout(stdout: str) -> Dict[str, Dict[str, Dict[str, int|str|List[str
     for path, configs in parsed.items():
         for config_name, info in configs.items():
             if "errs" not in info:
-                info["errs"] = [""]
+                info["errs"] = []
 
     return parsed
 
-def _dump_parsed(fname: str, parsed: Dict[str, Dict[str, Dict[str, int|str|List[str] ]]]) -> None:
+def _dump_parsed(fname: str, parsed: Dict[str, Dict[str, Dict[str, int|str|list ]]]) -> None:
     """
     Simple JSON write.
 
